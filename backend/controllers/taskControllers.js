@@ -17,8 +17,11 @@ const setTask = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please include Text field!!");
   }
+  const task = await Task.create({
+    text: req.body.text,
+  });
   // console.log(req.body);
-  return res.status(200).json({ message: "set goals" });
+  return res.status(200).json(task);
 });
 
 // @desc : UPDATE tasks
