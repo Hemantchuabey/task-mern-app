@@ -32,7 +32,7 @@ const updateTask = asyncHandler(async (req, res) => {
 
   if (!task) {
     res.status(400);
-    throw new Error("Goal not found");
+    throw new Error("Task not found !!");
   }
 
   const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
@@ -45,7 +45,14 @@ const updateTask = asyncHandler(async (req, res) => {
 // @route : DELETE /api/goals/:id
 // @access : Private after auth
 const deleteTask = asyncHandler(async (req, res) => {
-  return res.status(200).json({ message: `delete goals ${req.params.id}` });
+  const task = await Task.findById(req.params.id);
+  if (!task) {
+    res.status(400);
+    throw new Error("Task Not Found !!!");
+  }
+
+  const deletedTask = await Task.findByIdAndRemove(req.params.id);
+  return res.status(200).json(deletedTask);
 });
 
 module.exports = {
