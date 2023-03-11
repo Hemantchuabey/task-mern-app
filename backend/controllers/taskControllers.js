@@ -1,10 +1,12 @@
 const asyncHandler = require("express-async-handler");
+const Task = require("../Model/taskModel");
 
 // @desc : GET tasks
 // @route : GET /api/goals
 // @access : Private after auth
 const getTask = asyncHandler(async (req, res) => {
-  return res.status(200).json({ message: "get goals" });
+  const tasks = await Task.find();
+  return res.status(200).json(tasks);
 });
 
 // @desc : SET tasks
