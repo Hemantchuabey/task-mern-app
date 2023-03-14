@@ -41,14 +41,25 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error(`User already exists!!`);
   }
-  res.json({ message: `Register User` });
 });
 // @desc : Authenticate User
 // @route : POST  /api/users/login
 // @access : Public
 
 const loginUser = asyncHandler(async (req, res) => {
-  res.json({ message: `Login User` });
+  const { email, password } = req.body;
+  // check for user email
+  const user = await User.findOne({ email });
+  // password stored in db is hashed so to compare both password use bcrypt.compare
+  if (user && (await bcrypt.compare(password, user.password))) {
+    return res.json({
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+    });
+  } else {
+    throw new Error(`Invaild Credential !!!`);
+  }
 });
 // @desc : Get User data
 // @route : GET users /api/users/me
