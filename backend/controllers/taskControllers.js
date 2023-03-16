@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Task = require("../Model/taskModel");
+const User = require("../Model/userModel");
 
 // @desc : GET tasks
 // @route : GET /api/goals
@@ -36,10 +37,22 @@ const updateTask = asyncHandler(async (req, res) => {
     throw new Error("Task not found !!");
   }
 
+  const user = await User.findById(req.user.id);
+  // check for user
+  if (!user) {
+    res.status(401);
+    throw new Error(`User Not Found !!`);
+  }
+  // make sure the logged in user match the goal user
+  if (task.user.toString() != user.id) {
+    res.status(401);
+    throw new Error(`User not Found !!`);
+  }
+
   const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
-  return res.status(200).json(updateTask);
+  return res.status(200).json(updatedTask);
 });
 
 // @desc : DELETE tasks
@@ -51,7 +64,17 @@ const deleteTask = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Task Not Found !!!");
   }
-
+  const user = await User.findById(req.user.id);
+  // check for user
+  if (!user) {
+    res.status(401);
+    throw new Error(`User Not Found !!`);
+  }
+  // make sure the logged in user match the goal user
+  if (task.user.toString() != user.id) {
+    res.status(401);
+    throw new Error(`User not Found !!`);
+  }
   const deletedTask = await Task.findByIdAndRemove(req.params.id);
   return res.status(200).json(deletedTask);
 });
