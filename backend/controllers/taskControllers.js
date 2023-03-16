@@ -5,7 +5,7 @@ const Task = require("../Model/taskModel");
 // @route : GET /api/goals
 // @access : Private after auth
 const getTask = asyncHandler(async (req, res) => {
-  const tasks = await Task.find();
+  const tasks = await Task.find({ user: req.user.id });
   return res.status(200).json(tasks);
 });
 
@@ -19,6 +19,7 @@ const setTask = asyncHandler(async (req, res) => {
   }
   const task = await Task.create({
     text: req.body.text,
+    user: req.user.id,
   });
   // console.log(req.body);
   return res.status(200).json(task);
