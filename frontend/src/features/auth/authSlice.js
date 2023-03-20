@@ -42,16 +42,16 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(register.pending, (state) => {
-        state.isLoading(true);
+        state.isLoading = true;
       })
       .addCase(register.fulfilled, (state, actions) => {
-        state.isLoading(false);
-        state.isSuccess(true);
+        state.isLoading = false;
+        state.isSuccess = true;
         state.user = actions.payload;
       })
       .addCase(register.rejected, (state, actions) => {
-        state.isLoading(false);
-        state.isError(true);
+        state.isLoading = false;
+        state.isError = true;
         state.message = actions.payload;
 
         state.user = null;
